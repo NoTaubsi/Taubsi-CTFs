@@ -28,6 +28,7 @@ function debug($msg) { /* {{{ */
 /* }}} */
 function my_session_start() { /* {{{ */
     if(array_key_exists("PHPSESSID", $_COOKIE) and isValidID($_COOKIE["PHPSESSID"])) {
+        echo "---------PHPSESSID EXISTS AND IS VALID--------------";
     if(!session_start()) {
         debug("Session start failed");
         return false;

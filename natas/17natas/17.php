@@ -5,6 +5,9 @@ CREATE TABLE `users` (
   `username` varchar(64) DEFAULT NULL,
   `password` varchar(64) DEFAULT NULL
 );
+
+Find WSL IP:
+ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
 */
 
 if(array_key_exists("username", $_REQUEST)) {
@@ -15,6 +18,7 @@ if(array_key_exists("username", $_REQUEST)) {
     if(array_key_exists("debug", $_GET)) {
         echo "Executing query: $query<br>";
     }
+    exit();
 
     $res = mysqli_query($link, $query);
     if($res) {

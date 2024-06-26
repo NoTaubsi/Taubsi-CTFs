@@ -1,12 +1,11 @@
-param (
-    [string]$type
-)
 . "../natas_filter.ps1"
+. "../getCookieValueFromKey.ps1"
 
-$server = "natas22.natas.labs.overthewire.org"
-$url = "http://$server/?revelio"
+$server = "natas26.natas.labs.overthewire.org"
+$server = "localhost:8000"
+$url = "http://$server"
 
-$username = "natas22"
+$username = "natas26"
 $password = "***REMOVED***"
 
 $pair = "${username}:${password}"
@@ -18,8 +17,3 @@ $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
 }
-
-
-"`n----------------------------"
-
-write-host (Invoke-WebRequest -Uri $url -Headers $headers -MaximumRedirection 0).RawContent

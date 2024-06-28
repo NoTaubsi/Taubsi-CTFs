@@ -1,0 +1,25 @@
+#--session started--#
+myclass() serialized: O:7:"myclass":1:{i:0;s:10:"lolollolol";}
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ 1 - drawImage: img/natas26_j7vak9ne748f0in1j69ttek9qr.png
+ 2 - - drawFromUserData
+ 3 - - - GD imageline($_GET x1 x2 y1 y2)
+ 4 - - GDimagepng save to: img/natas26_j7vak9ne748f0in1j69ttek9qr.png <----- you just saved a bunch of garbage from $_COOKIE
+ 5 - showImage
+ 6 - storeData: Stores $drawing object in cookie
+#--session end--#
+
+
+#--session started--#
+myclass() serialized: O:7:"myclass":1:{i:0;s:10:"lolollolol";}
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ 1 - drawImage: img/natas26_j7vak9ne748f0in1j69ttek9qr.png
+ 2 - - drawFromUserData
+ 3 - - - GD imageline($_COOKIE)
+ 4 - - GDimagepng save to: img/natas26_j7vak9ne748f0in1j69ttek9qr.png <----- you just saved a bunch of garbage from $_COOKIE
+ 5 - showImage
+ 6 - storeData: Stores $drawing object in cookie
+#--session end--#
+
+

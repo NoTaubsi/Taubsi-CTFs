@@ -3,6 +3,33 @@
 // cheers kaliman ;)
 // - morla
 
+$logger = new Logger("mylog");
+class myclass {
+    public string $myprop;
+    public function getContent() {
+        return file_get_contents("tmp/lol.txt", false);
+    }
+    public function __serialize(): array {
+        //echo "__serialize: " . file_get_contents("tmp/lol.txt", false) . PHP_EOL;
+        $array = [];
+        array_push($array, $this->getContent());
+        //$this->$myprop = file_get_contents("tmp/lol.txt", false);
+        return $array;
+        //echo file_get_contents("etc/natas_webpass/natas27", false);
+    }
+    public function __unserialize(array $data): void {
+        //echo "__UNserialize: " . file_get_contents("tmp/lol.txt", false)  . PHP_EOL;
+        echo "vardump ";
+        var_dump($data);
+        echo  PHP_EOL;
+        //echo file_get_contents("etc/natas_webpass/natas27", false);
+    }
+}
+$myclass = new myclass();
+$myclass->myprop = "helloMyProp";
+$str = serialize($myclass);
+$logger->log("myclass() serialized: " . $str);
+unserialize($str);
 class Logger
 {
     private $logFile;
@@ -13,7 +40,7 @@ class Logger
     {
         // initialise variables
         $this->initMsg = "#--session started--#\n";
-        $this->exitMsg = "#--session end--#\n";
+        $this->exitMsg = "#--session end--#\n\n\n";
         #$this->logFile = "/tmp/natas26_" . $file . ".log";
         $this->logFile = 'tmp/natas26_' . $file . ".log";
 
@@ -41,54 +68,57 @@ class Logger
 
 function showImage($filename)
 {
-    if (file_exists($filename))
+    global $logger;
+    $logger->log(" 5 - showImage");
+    if (file_exists($filename)) {
         echo "<img src=\"$filename\">";
+        #$logger->log(' - - echo "<img src="' . $filename . '">');
+    }
 }
 
 function drawImage($filename)
 {
+    global $logger;
+    $logger->log(" 1 - drawImage: " .$filename);
     $img = imagecreatetruecolor(400, 300);
     drawFromUserdata($img);
     imagepng($img, $filename);
+    $logger->log(" 4 - - GDimagepng save to: " .$filename . " <----- you just saved a bunch of garbage from \$_COOKIE");
     imagedestroy($img);
 }
 
 function drawFromUserdata($img)
 {
+    global $logger;
+    $logger->log(" 2 - - drawFromUserData");
     if (
         array_key_exists("x1", $_GET) && array_key_exists("y1", $_GET) &&
         array_key_exists("x2", $_GET) && array_key_exists("y2", $_GET)
     ) {
-
         $color = imagecolorallocate($img, 0xff, 0x12, 0x1c);
-        imageline(
-            $img,
-            $_GET["x1"],
-            $_GET["y1"],
-            $_GET["x2"],
-            $_GET["y2"],
-            $color
-        );
+        $logger->log(" 3 - - - GD imageline(\$_GET x1 x2 y1 y2)");
+        imageline($img, $_GET["x1"], $_GET["y1"], $_GET["x2"], $_GET["y2"], $color);
     }
 
     if (array_key_exists("drawing", $_COOKIE)) {
-        $drawing = unserialize(base64_decode($_COOKIE["drawing"]));
-        if ($drawing)
-            foreach ($drawing as $object)
-                if (
-                    array_key_exists("x1", $object) &&
-                    array_key_exists("y1", $object) &&
-                    array_key_exists("x2", $object) &&
-                    array_key_exists("y2", $object)
+        $logger->log(" 3 - - - GD imageline(\$_COOKIE)");
+        $drawingArray = unserialize(base64_decode($_COOKIE["drawing"]));
+        if ($drawingArray)
+            foreach ($drawingArray as $drawing)
+                if (                                    //Can do:
+                    array_key_exists("x1", $drawing) && //x1=/etc/webpass/
+                    array_key_exists("y1", $drawing) && //x2=echo "hi"
+                    array_key_exists("x2", $drawing) && //y1=
+                    array_key_exists("y2", $drawing)
                 ) {
 
                     $color = imagecolorallocate($img, 0xff, 0x12, 0x1c);
                     imageline(
                         $img,
-                        $object["x1"],
-                        $object["y1"],
-                        $object["x2"],
-                        $object["y2"],
+                        $drawing["x1"],
+                        $drawing["y1"],
+                        $drawing["x2"],
+                        $drawing["y2"],
                         $color
                     );
 
@@ -98,6 +128,8 @@ function drawFromUserdata($img)
 
 function storeData()
 {
+    global $logger;
+    $logger->log(" 6 - storeData: Stores \$drawing object in cookie");
     $new_object = array();
 
     if (
@@ -124,7 +156,7 @@ function storeData()
 
 <h1>natas26</h1>
 <div id="content">
-    
+
     Draw a line:<br>
     <form name="input" method="get">
         X1<input type="text" name="x1" size=2>
@@ -135,7 +167,15 @@ function storeData()
     </form>
 
     <?php
+
     session_start();
+
+    if (array_key_exists("drawing", $_COOKIE)) {
+        $logger->log("Cookie exists: " . base64_decode($_COOKIE["drawing"]));
+        $logger->log(print_r(unserialize(base64_decode($_COOKIE["drawing"]))));
+    } else {
+        $logger->log("No Cookie: x1=" . $_GET["x1"] . ",x2=" . $_GET["x2"] . ",y1=" . $_GET["y1"] . ",y2=" . $_GET["y2"]);
+    }
 
     if (
         array_key_exists("drawing", $_COOKIE) ||
@@ -146,6 +186,8 @@ function storeData()
         drawImage($imgfile);
         showImage($imgfile);
         storeData();
+    } else {
+        $logger->log("failed first check");
     }
 
     ?>

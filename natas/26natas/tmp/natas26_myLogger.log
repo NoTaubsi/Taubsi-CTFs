@@ -1,0 +1,258 @@
+#--session started--#
+#--session end--#
+#--session started--#
+img/natas26_5p5tqnhaaqqcp0qo0nl6ss8ofn.png
+#--session end--#
+#--session started--#
+img/natas26_e0k234kuq62p9gbc8m5sad3lms.png
+#--session end--#
+#--session started--#
+img/natas26_prucifkp5h73980dirldcqne5p.png
+#--session end--#
+
+
+#--session started--#
+img/natas26_mmh4olvs5vntb30niefblbpqv8.png
+#--session end--#
+
+
+#--session started--#
+#--session end--#
+
+
+#--session started--#
+#--session end--#
+
+
+#--session started--#
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+file exists: img/natas26_08tg6dqvqo1hvs7un5n18ib7j7.png
+ - showImage
+echo "<img src="img/natas26_08tg6dqvqo1hvs7un5n18ib7j7.png">
+ - sup
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_b0suurb581kqrld0su6m200nko.png">
+ - sup
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_be6bcmg8hteci50qvg11dklfto.png">
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+Cookie exists: Array
+ - showImage
+ - - echo "<img src="img/natas26_be6bcmg8hteci50qvg11dklfto.png">
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - showImage
+ - - echo "<img src="img/natas26_pcbln1nesbibuiarmc7hupb6oa.png">
+#--session end--#
+
+
+#--session started--#
+ - drawImage
+ - - drawFromUserData
+Cookie exists: Array
+ - showImage
+ - - echo "<img src="img/natas26_pcbln1nesbibuiarmc7hupb6oa.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_jt19qbj2f6jcvaqburgjc2f46j.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: Array
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_jt19qbj2f6jcvaqburgjc2f46j.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_q60g524t0pq0uhv7nul49g5stn.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: YToxOntpOjA7YTo0OntzOjI6IngxIjtzOjE6IjEiO3M6MjoieTEiO3M6MToiMyI7czoyOiJ4MiI7czoxOiIyIjtzOjI6InkyIjtzOjE6IjQiO319
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_q60g524t0pq0uhv7nul49g5stn.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_h5m3s00hpml171bbsvosiivf81.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+Array
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_h5m3s00hpml171bbsvosiivf81.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_1v46t8jl52spinmfdsolh4tf43.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_1v46t8jl52spinmfdsolh4tf43.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_l5ra6jd7gb2mmv769u27ufu2i5.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_l5ra6jd7gb2mmv769u27ufu2i5.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_0hh02dqk86b17i5vnacb24rsln.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_0hh02dqk86b17i5vnacb24rsln.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_8q2dsrndggoadoq7ca6kl2cqb0.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_8q2dsrndggoadoq7ca6kl2cqb0.png">
+#--session end--#
+
+
+#--session started--#
+No Cookie: x1=1,x2=2,y1=3,y2=4
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_q1v4is2e145fc609nnckspnf7l.png">
+#--session end--#
+
+
+#--session started--#
+Cookie exists: a:1:{i:0;a:4:{s:2:"x1";s:1:"1";s:2:"y1";s:1:"3";s:2:"x2";s:1:"2";s:2:"y2";s:1:"4";}}
+1
+ - drawImage
+ - - drawFromUserData
+ - showImage
+ - - echo "<img src="img/natas26_q1v4is2e145fc609nnckspnf7l.png">
+#--session end--#
+
+

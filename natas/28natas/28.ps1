@@ -49,9 +49,10 @@ for ($i = 1; $i -le $appendFullLines; $i++) {
 if ($additionalAs -gt 0) {
     $bla = 'a' * $additionalAs
     $a += $bla 
-    $blabla = $bla+$unknownline.Substring($additionalAs)
+    $blabla = $bla + $unknownline.Substring($additionalAs)
     write-host $blabla
-} else {
+}
+else {
     write-host $unknownline;
 }
 
@@ -72,34 +73,90 @@ CE 82 A9 55 3B 65 B8 12 80 FB 6D 3B F2 90 0F 47 #2*'a' && 14*after-string char  
 75 FD 50 44 FD 06 3D 26 F6 BB 7F 73 4B 41 C8 99 #16*after-string char
 #>
 
-$checkbytearray = [byte]0x01..[byte]0xFF
-$formData = "?query=$a"
-try {
-    Invoke-WebRequest -Headers $headers -URI ($url + $formdata) -MaximumRedirection 0 -ErrorVariable errorr -ErrorAction SilentlyContinue
-}
-catch {
-    $str = $errorr[0].InnerException.Response.Headers.Location.OriginalString
-    $base64 = [uri]::UnescapeDataString($str.Substring(18))
+function GetLineAccordingToInputLength {
+    param (
+        [string]$pData,
+        [int]$returnLine
+    )
 
-    $bytearray = [System.Convert]::FromBase64String($base64)
-    $hex = $bytearray | Format-Hex
-    $i = 0;
-    foreach ($line in ($hex.HexBytes -split "`n")) {
-        switch ($i) {
-            3 { Write-Host `n }
-            (3 + $appendFullLines) { Write-Host `n }
-            Default {}
-        }
-        if ($line -like "B3 90 38 C2 8D F7 9B 65 D2 61 51 DF 58 F7 EA A3") {
-            write-host $line " = aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa"
-        }
-        else {
-            write-host $line 
-        }
-        
-        $i += 1;
+    try {
+        $as = "query=$pData"
+        <#
+        $as += 'a' * $aCharacterAmount
+        if ($PSBoundParameters.ContainsKey('addChars')) {
+            foreach ($char in $addChars) {
+                $as += [char]$addChars
+            }
+        } #>
+        Invoke-WebRequest -Headers $headers -URI $url -Method Post -Body $as -MaximumRedirection 0 -ErrorVariable errorr -ErrorAction SilentlyContinue
     }
-} 
+    catch {
+        $str = $errorr[0].InnerException.Response.Headers.Location.OriginalString
+        $base64encoded = $str.Substring(18)
+        $base64 = [uri]::UnescapeDataString($base64encoded)
+    
+        $bytearray = [System.Convert]::FromBase64String($base64)
+        $hex = $bytearray | Format-Hex
+        $i = 1;
+        foreach ($line in ($hex.HexBytes -split "`n")) {
+            <#if ($line -like "B3 90 38 C2 8D F7 9B 65 D2 61 51 DF 58 F7 EA A3") {
+                write-host $i ":" $line " = aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa"
+            }
+            else {
+                write-host ($i.ToString() + ":" + $line) 
+            }#>
+            if ($i -eq $returnLine) {
+                $result = $line
+                break
+            }
+            $i += 1;
+        }
+    }
+    return $result
+}
+$ppurl = 'a' * (10 + 16)
+$16AbyteStr = GetLineAccordingToInputLength -pData $ppurl -returnLine 4
+Write-Host "Full A Bytes: " `n $16AbyteStr `n 
+
+$checkCharArray = @()
+
+# Add ASCII characters (0-127)
+for ($i = 32; $i -le 127; $i++) {
+    $checkCharArray += [char]$i
+}
+
+
+$prestr = ""
+for ($minusCharAmount = 1; $minusCharAmount -le 16; $minusCharAmount++) {
+
+    $charAmount = 16 - $minusCharAmount
+    $ppurl = 'a' * (10 + $charAmount)
+    $ppurl += $prestr
+    $ppurl
+    
+    $forAbyteStrToCheckFor = GetLineAccordingToInputLength -pData $ppurl -returnLine 4
+
+    write-host "Searching/Checking for: "`n ("$charamount 'a':$prestr") `n "                 $forAbyteStrToCheckFor" `n 
+    
+    foreach ($char in $checkCharArray) {
+        
+        $currentPreStr = $prestr + $char
+        $ppurl = 'a' * (10 + $charAmount)
+        $ppurl += $currentPreStr
+
+        #Write-Host " - Checking with " `n $charamount "'a':" $currentPreStr
+        $SingleByteCheckResult = GetLineAccordingToInputLength -pData $ppurl -returnLine 4
+        if ($SingleByteCheckResult -eq $forAbyteStrToCheckFor) {
+            write-host `n " - - RESULT::::" $charamount  ":" + $char
+            Write-Host " - - $forAbyteStrToCheckFor " `n " - - equals = " `n " - - $SingleByteCHeckResult"
+            $prestr += $char
+            break
+        } else {
+            write-host ("    FALSE-Input: $charamount" + "x" + ":'a'$currentPreStr" + "     $SingleByteCheckResult")  
+        }
+    }
+    write-host " `n - Nr:$minusCharAmount " $prestr `n
+}
 
 
 <#

@@ -43,6 +43,8 @@ function validUser($link,$usr){
 
     $user=mysqli_real_escape_string($link, $usr);
 
+    echo PHP_EOL . "escaped user:" . $user . PHP_EOL . '<br>';
+
     $query = "SELECT * from users where username='$user'";
     $res = mysqli_query($link, $query);
     if($res) {
@@ -59,6 +61,7 @@ function dumpData($link,$usr){
     $user=mysqli_real_escape_string($link, trim($usr));
 
     $query = "SELECT * from users where username='$user'";
+    echo PHP_EOL . "<br>" . "dumpData: $query" . "<br>" . PHP_EOL;
     $res = mysqli_query($link, $query);
     if($res) {
         if(mysqli_num_rows($res) > 0) {
@@ -103,6 +106,7 @@ if(array_key_exists("username", $_REQUEST) and array_key_exists("password", $_RE
             echo "Here is your data:<br>";
             $data=dumpData($link,$_REQUEST["username"]);
             print htmlentities($data);
+            print $data;
         }
         else{
             echo "Wrong password for user: " . htmlentities($_REQUEST["username"]) . "<br>";
@@ -112,6 +116,7 @@ if(array_key_exists("username", $_REQUEST) and array_key_exists("password", $_RE
         //user doesn't exist
         if(createUser($link,$_REQUEST["username"],$_REQUEST["password"])){
             echo "User " . htmlentities($_REQUEST["username"]) . " was created!";
+            echo "<br> " .$_REQUEST["username"];
         }
     }
 

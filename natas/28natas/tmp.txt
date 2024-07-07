@@ -121,7 +121,7 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 ----
 1b e8 25 11 a7 ba 5b fd 57 8c 0e ef 46 6d b5 9c #16*pre-string bytes     #pre-string: 35 characters
 dc 84 72 8f dc f8 9d 93 75 1d 10 a7 c7 5c 8c f2 #16*pre-string bytes     
-c0 87 2d ee 8b c9 0b 11 56 91 3b 08 a2 23 a3 9e #3*pre-string bytes && 13*a bytes 
+c0 87 2d ee 8b c9 0b 11 56 91 3b 08 a2 23 a3 9e #*pre-string bytes && 13*a bytes 
 
 b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 #16*a bytes.
 b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 #16*a bytes.
@@ -144,3 +144,21 @@ b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3
 
 ce 82 a9 55 3b 65 b8 12 80 fb 6d 3b f2 90 0f 47 
 75 fd 50 44 fd 06 3d 26 f6 bb 7f 73 4b 41 c8 99 #15 bytes of after-string
+
+
+
+
+
+
+
+10+16+16
+
+1b e8 25 11 a7 ba 5b fd 57 8c 0e ef 46 6d b5 9c //never changes;no influence
+dc 84 72 8f dc f8 9d 93 75 1d 10 a7 c7 5c 8c f2 //never changes;no influence
+5a a9 eb 8b 6c 70 f6 24 31 cf c8 a2 e4 b5 71 05 /*This line contains: ??????1234567890*/ /*First 6 Chars are unknown and static, 10 are my own input */
+
+b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 /* 16 characters of 'a'*/ 
+b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 /* 16 characters of 'a'*/ 
+
+73 8a 5f fb 4a 45 00 24 67 75 17 5a e5 96 bb d6 /* These content of these two lines are appended after my input */
+f3 4d f3 39 c6 9e dc e1 1f 66 50 bb ce d6 27 02 /* Might not be 16 bytes of data, might contain padding */

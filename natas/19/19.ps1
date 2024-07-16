@@ -1,8 +1,12 @@
-$server = "natas19.natas.labs.overthewire.org"
-$url = "http://$server/index.php"
-
-$username = "natas19"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -12,13 +16,11 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
 
 $correctStr = 'The credentials'
 
-
-
-function Convert-StringToHex { #yes this is from gpt 
+function Convert-StringToHex { #yes this is from gpt
     param (
         [string]$plainText
     )

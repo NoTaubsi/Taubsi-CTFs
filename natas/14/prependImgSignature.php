@@ -17,7 +17,7 @@ function prependSignature($filename, $signature) {
 }
 
 // Usage
-$filename = "C:\Users\Francisco\Desktop\little file.php";
+$filename = "C:\.....\little file.php";
 $signature = 'ffd8ffe0'; // JPEG signature
 
 if (prependSignature($filename, $signature)) {

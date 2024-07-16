@@ -3,7 +3,7 @@ param (
     [string]$name
 )
 
-$server = "natas20.natas.labs.overthewire.org" 
+$server = "natas20.......overthewire.org" 
 #$server = "localhost:8000"
 
 
@@ -17,8 +17,8 @@ if ($name) {
     $url += ''
 }
 
-$username = "natas20"
-$password = "***REMOVED***"
+$username = ""
+$password = ""
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)

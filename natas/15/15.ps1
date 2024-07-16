@@ -1,10 +1,18 @@
-# Define the URL for the POST request
-$url = "http://natas15.natas.labs.overthewire.org"  # Replace with your actual URL
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
-#header login credentials, if needed
-$authorization = "Basic bmF0YXMxNTpTZHFJcUJzRmN6M3lvdGxOWUVyWlNad2Jsa20wbHJ2eA=="
+$pair = "${username}:${password}"
+$bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+$base64 = [System.Convert]::ToBase64String($bytes)
+$authorization = "Basic $base64"
 
-# Define the headers for the POST request
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"

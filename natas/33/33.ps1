@@ -1,18 +1,19 @@
 using namespace Microsoft.PowerShell.Utility
 
-$server = "natas33.natas.labs.overthewire.org"
-#$server = "localhost:8000"
-$url = "http://$server"
-
-$username = "natas33"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
 $base64 = [System.Convert]::ToBase64String($bytes)
 $authorization = "Basic $base64"
-
-$boundary = [System.Guid]::NewGuid().ToString()
 
 $headers = @{
     "Authorization" = $authorization

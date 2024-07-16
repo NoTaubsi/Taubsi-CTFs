@@ -30,8 +30,6 @@ $(cut -c 1,3 < /etc/natas_webpass/natas17)
 
 ^[$(cut -c 1 < /etc/natas_webpass/natas17 )]
 
-curl -u natas16:***REMOVED*** http://natas16.natas.labs.overthewire.org/?needle=afr
-
 echo -e "this is a \x22number\x22"
 
 $(cut -c 1 test.txt)

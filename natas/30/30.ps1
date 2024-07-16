@@ -1,9 +1,12 @@
-$server = "natas30.natas.labs.overthewire.org/"
-#$server = "localhost:8000"
-$url = "http://$server"
-
-$username = "natas30"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -13,7 +16,8 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
+
 <#
 #explanation:
     Source Code: mysqlquery = "select * from where user=asd and password =".$dbh->quote(param('password'));
@@ -22,8 +26,6 @@ param('password') explodes into an array["1 OR 2 > 1", "4"] because ?password=as
 dbh->quote(array[1,2]) is interpreted by Perl as quote(1, 2)
 
 the second parameter of quote defines the quoting type; for integers, it will not get quoted.
-
-
 #>
 
 $user = "username=natas31"

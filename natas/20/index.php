@@ -40,7 +40,7 @@ function myread($sid)
         debug("Invalid SID");
         return "";
     }
-    $filename = 'C:\Users\Francisco\Desktop\OTW\natas\20natas\session_file';//session_save_path() . "/" . "mysess_" . $sid;
+    $filename = 'C:\Users\......\session_file';//session_save_path() . "/" . "mysess_" . $sid;
     if (!file_exists($filename)) {
         debug("Session file doesn't exist");
         return "";
@@ -68,7 +68,7 @@ function mywrite($sid, $data)
         debug("Invalid SID");
         return;
     }
-    $filename = 'C:\Users\Francisco\Desktop\OTW\natas\20natas\session_file'; //;session_save_path() . "/" . "mysess_" . $sid;
+    $filename = 'C:\Users\.......\session_file'; //;session_save_path() . "/" . "mysess_" . $sid;
     $data = "";
     debug("Saving in " . $filename);
     ksort($_SESSION);

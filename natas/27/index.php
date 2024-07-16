@@ -95,7 +95,7 @@ function createUser($link, $usr, $pass){
 
 
 if(array_key_exists("username", $_REQUEST) and array_key_exists("password", $_REQUEST)) {
-    $link = mysqli_connect('localhost', 'root', 'cisco23');
+    $link = mysqli_connect('localhost', '', '');
     mysqli_select_db($link, 'sys');
 
 

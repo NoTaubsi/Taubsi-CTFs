@@ -12,7 +12,7 @@ function getImageSignature($filename, $bytes = 8) {
 }
 
 // Usage
-$filename = "C:\Users\Francisco\Desktop\_DSC0721.JPG";
+$filename = "C:\.....\DSC2721.JPG";
 $signature = getImageSignature($filename);
 echo $signature;
 ?>

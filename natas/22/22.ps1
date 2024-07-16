@@ -1,13 +1,12 @@
 param (
-    [string]$type
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
 )
-. "../natas_filter.ps1"
-
-$server = "natas22.natas.labs.overthewire.org"
-$url = "http://$server/?revelio"
-
-$username = "natas22"
-$password = "***REMOVED***"
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -19,6 +18,9 @@ $headers = @{
     "Content-Type"  = "application/x-www-form-urlencoded"
 }
 
+. "../natas_filter.ps1"
+
+$url = "http://$server/?revelio"
 
 "`n----------------------------"
 

@@ -1,12 +1,15 @@
 . "../natas_filter.ps1"
 . "../getCookieValueFromKey.ps1"
 
-$server = "natas25.natas.labs.overthewire.org"
-#$server = "localhost:8000"
-$url = "http://$server"
-
-$username = "natas25"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -16,7 +19,7 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
 
     #this reads the file, but the file does not contain $__MSG yet
     #$param += "....//....//....//....//....//....//....//....//....//etc/Natas_webpass/natas26"   

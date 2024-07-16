@@ -1,9 +1,12 @@
-$server = "natas29.natas.labs.overthewire.org/"
-#$server = "localhost:8000"
-$url = "http://$server"
-
-$username = "natas29"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -13,7 +16,7 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
 
 #characters ignored by UNIX file system 
 <#

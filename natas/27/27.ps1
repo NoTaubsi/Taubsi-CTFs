@@ -1,12 +1,15 @@
 . "../natas_filter.ps1"
 . "../getCookieValueFromKey.ps1"
 
-$server = "natas27.natas.labs.overthewire.org"
-#$server = "localhost:8000"
-$url = "http://$server"
-
-$username = "natas27"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -16,8 +19,7 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
-
+} 
 
 $s = [char]0xA0 #non-break space
 $param = "?username=natas28$s$s$s$s$s$s$s$s&password=hi"

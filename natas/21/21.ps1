@@ -1,22 +1,15 @@
-param (
-    [string]$type
-)
 . "../natas_filter.ps1"
 
-$server = "natas21.natas.labs.overthewire.org"
-$serverExp = "natas21-experimenter.natas.labs.overthewire.org"
-
-#$server = "localhost:8000"
-#$serverExp = "localhost:8000"
-
-#$url = "http://$server/21.php?debug"
-#$urlExp = "http://$serverExp/21exp.php?debug"
-
-$url = "http://$server/index.php?debug"
-$urlExp = "http://$serverExp/index.php?debug"
-
-$username = "natas21"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password,
+    [string]$type
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -26,7 +19,12 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
+
+$serverExp = "natas21-experimenter.natas.labs.overthewire.org"
+
+$url = "http://$server/index.php?debug"
+$urlExp = "http://$serverExp/index.php?debug"
 
 $postData = @{
     submit = "Update"
@@ -42,7 +40,6 @@ Write-Host "-----------------------------------"
 Write-Host $url
 Write-Host "-----------------------------------"
 $response = Invoke-WebRequest -URI $urlExp -Headers $headers -Method 'POST' -Body $postData -SessionVariable sessVar
-#FilterNatasHTML($response)
 "-----------------"
 $response = Invoke-WebRequest -URI $url -Headers $headers -WebSession $sessVar
 FilterNatasHTML($response) 

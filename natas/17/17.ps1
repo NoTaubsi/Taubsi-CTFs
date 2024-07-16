@@ -1,13 +1,12 @@
-$lowercaseChars = 97..122 | ForEach-Object { [char]$_ }
-$uppercaseChars = 65..90 | ForEach-Object { [char]$_ }
-$numbers = 48..57 | ForEach-Object { [char]$_ }
-
-$all_characters = $lowercaseChars + $uppercaseChars + $numbers
-
-$url = "http://natas17.natas.labs.overthewire.org/?debug"
-
-$username = "natas17"
-$password = "***REMOVED***"
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password
+)
+$url = $server
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -17,7 +16,13 @@ $authorization = "Basic $base64"
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
+
+$lowercaseChars = 97..122 | ForEach-Object { [char]$_ }
+$uppercaseChars = 65..90 | ForEach-Object { [char]$_ }
+$numbers = 48..57 | ForEach-Object { [char]$_ }
+
+$all_characters = $lowercaseChars + $uppercaseChars + $numbers
 
 $result = ""
 <#for ($position = 1; $position -le 32; $position ++) {    

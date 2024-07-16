@@ -1,4 +1,4 @@
-$authorization = "Basic bmF0YXMxNjpoUGtqS1l2aUxRY3RFVzMzUW11WEw2ZURWZk1XNHNHbw=="
+$authorization = "Basic ..........."
 
 $headers = @{
     "Authorization" = $authorization

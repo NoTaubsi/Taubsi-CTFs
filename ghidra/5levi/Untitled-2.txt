@@ -1,0 +1,6 @@
+break main
+run
+set $new_path = malloc(31)
+call strcpy($new_path, "/etc/leviathan_pass/leviathan6\0")
+set *(char **)0x804a00a = $new_path
+continue

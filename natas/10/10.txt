@@ -1,0 +1,6 @@
+passthru("grep -i $key dictionary.txt");
+
+
+grep -i "" etc/natas_webpass/natas11 dictionary.txt
+
+grep -i myfilter dictionary.txt

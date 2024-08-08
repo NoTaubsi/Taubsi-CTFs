@@ -26,6 +26,7 @@ $param = "?username=natas28$s$s$s$s$s$s$s$s&password=hi"
 
 (Invoke-WebRequest -Headers $headers -URI ($url + $param)  -SessionVariable sessVar).Content
 
+#"normal" spaces
 $param = "?username=natas28        &password=hi"
 (Invoke-WebRequest -Headers $headers -URI ($url + $param) -WebSession $sessVar).Content
 

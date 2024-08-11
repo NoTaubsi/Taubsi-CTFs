@@ -1,3 +1,5 @@
+. "../../scripts/GetInputFieldValueByName.ps1"
+
 param (
     [Parameter(Mandatory = $true)]
     [string]$server,
@@ -12,53 +14,36 @@ if ($server.EndsWith("/")) {
 }
 
 if ($server.startsWith("https://")) {
-    
     $url = $server;
-    $server = $server.Substring("https://".Length)
 }
 else {
     Write-Host `n"Wrong Server Format"`n
     exit
 }
-<#
-if (-not (Get-Module -ErrorAction Ignore -ListAvailable PSParseHTML)) {
-    Write-Verbose "Installing PSParseHTML module for the current user..."
-    Install-Module -Scope CurrentUser PSParseHTML -ErrorAction Stop
-}#>
-
-function GetInputFieldValueByName {
-    param (
-        [Parameter(Mandatory = $true)]
-        [string]$iwrResponse,
-        [Parameter(Mandatory = $true)]
-        [string]$FieldName
-    )
-    $csrf = $iwrResponse.InputFields.FindByName("csrf").Value;
-    if (!$csrf) {
-        write-host "CSRF Empty";
-        exit
-    }
-    return $csrf
-}
 
 $commandurl = $url + "/login";
 
 #get token to login
-$response = iwr -URI $commandurl -SessionVariable $requestSession -Method Get -UseBasicParsing;  
+$response = iwr -URI $commandurl -SessionVariable requestSession -Method Get;  
 
+GetInputFieldValueByName $response "csrf"
 #login
-$data = @{ "csrf" = GetInputFieldValueByName($response); "username" = "$username"; "password" = "$password" } | ConvertTo-Json
+#$data = @{ "csrf" = GetInputFieldValueByName $response "csrf"; "username" = "$username"; "password" = "$password" } | ConvertTo-Json
+$data = "csrf=" + ( GetInputFieldValueByName $response "csrf" )+ "&username=$username&password=$password"
 $response = iwr -URI $commandurl -WebSession $requestSession -Method Post -Body $data; 
 
-
 $commandurl = $url + "/api/user/$username";
+#$data = "csrf=" + (GetInputFieldValueByName $response "csrf") 
+$response = iwr -URI $commandurl -WebSession $requestSession -Method Get # -Body $data;
 
-$data = @{ "csrf" = GetInputFieldValueByName($response)} | ConvertTo-Json; 
-$response = iwr -URI $commandurl -WebSession $requestSession -Method Post -Body $data;
-$response.Content
+write-host `n$response`n
+
+$commandurl = $url + "/api/user/carlos";
+$response = iwr -URI $commandurl -WebSession $requestSession -Method Delete
+write-host `n$response`n
 
 exit
 #delete carlos
-$data = @{ "csrf" = GetInputFieldValueByName($response); "username" = "$username"; "password" = "$password" } | ConvertTo-Json
+$data = @{ "csrf" = (GetInputFieldValueByName $response "csrf"); "username" = "$username"; "password" = "$password" } | ConvertTo-Json
 $response = iwr -URI $commandurl -WebSession $requestSession -Method Delete -Body $data; 
 
